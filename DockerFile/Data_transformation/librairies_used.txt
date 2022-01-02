@@ -1,0 +1,3 @@
+pandas - pip install pandas
+pattern - pip install pattern
+keybert - pip install keybert

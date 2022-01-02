@@ -1,0 +1,5 @@
+pandas - pip install pandas
+profanity_check - pip install alt-profanity-check
+requests - pip install requests
+validators - pip install validators
+time - 

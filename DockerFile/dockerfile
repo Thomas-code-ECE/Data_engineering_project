@@ -1,0 +1,15 @@
+# syntax=docker/dockerfile:1
+FROM python:3.8
+WORKDIR /usr/src/app
+RUN pip install --upgrade pip &&\ 
+    pip install numpy &&\
+    pip install pandas &&\
+    pip install scikit-learn &&\
+    pip install alt-profanity-check &&\
+    pip install sklearn --upgrade &&\
+    pip install requests &&\
+    pip install validators &&\
+    pip install pattern &&\
+    pip install keybert 
+CMD ["python","Data_cleansing/data_cleasing.py"]
+CMD ["python","Data_transformation/data_transformation.py"]
