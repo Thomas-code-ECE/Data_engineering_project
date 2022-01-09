@@ -15,6 +15,11 @@ id -u
 
 Now edit the **.env** file and swap out 1000 for your own.
 
+Run the following command to creat the volumes needed in order to send data to airflow:
+```sh
+mkdir -p ./dags ./logs ./plugins
+```
+
 Download this file and add it to the ./dags folder:
 
 ```sh
