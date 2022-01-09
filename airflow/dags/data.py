@@ -17,9 +17,8 @@ DAGS_FOLDER = '/opt/airflow/dags/'
 REQUEST_URL = 'https://www.dnd5eapi.co/api/'
 
 default_args_dict = {
-    'start_date': datetime.datetime(2020, 6, 25, 0, 0, 0),
+    'start_date': datetime.datetime.now(),
     'concurrency': 1,
-    'schedule_interval': "35 12 * * 5",
     'retries': 1,
     'retry_delay': datetime.timedelta(minutes=1),
 }
@@ -29,11 +28,11 @@ assignment_dag = DAG(
     default_args=default_args_dict,
     catchup=False,
     template_searchpath=DAGS_FOLDER,
-    schedule_interval= "35 12 * * 5",
 )
 
 
 def _work1(output_folder: str):
+
 	#Loading kym.json file as a dataframe object
 	df = pd.read_json(f'{output_folder}/kym.json')
 
@@ -78,19 +77,14 @@ def _work4(output_folder: str):
 	#Loading kym.json file as a dataframe object
 	df = pd.read_json(f'{output_folder}/kym_cleaned.json')
 
-	#Remove the column meta and keep the column: width, height and description
-	width_value = []
-	height_value = []
+	#Remove the column meta and keep the column description
 	description_value = []
 	for index,element in enumerate(df.meta):
-		width_value.append(element["og:image:width"])
-		height_value.append(element["og:image:height"])
 		if("description" in element):
 			description_value.append(element["description"])
 		else:
 			description_value.append("unknown")
-	df["widht"] = width_value
-	df["height"] = height_value
+            
 	df["description"] = description_value
 	df.drop('meta', inplace=True, axis=1)
 
@@ -120,7 +114,7 @@ def _work6(output_folder: str):
 	#Remove unicode characters from description
 	description_value = []
 	for index,element in enumerate(df.description):
-	    description_value.append(element.encode("ascii","ignore").decode())
+		description_value.append(element.encode("ascii","ignore").decode())
 	df["description"] = description_value
 
 	#save to a new cleansed jason file
@@ -137,10 +131,10 @@ def _work7(output_folder: str):
 	    tags_meme.append(list(dict.fromkeys([tag.lower() for tag in element])))
 	df["tags"] = tags_meme
 
-	#Transform all keywords lower case.
+	#Transform all desxription words to lower case.
 	descriptions_keywords = []
 	for index,element in enumerate(df.description):
-	    descriptions_keywords.append(list(dict.fromkeys([keyword.lower() for keyword in element])))
+		descriptions_keywords.append(element.lower())
 	df["description"] = descriptions_keywords
 
 	#save to a new cleansed jason file
@@ -202,6 +196,10 @@ def _work10(output_folder: str):
 	for index,element in enumerate(df.search_keywords):
 	    search_keywords_meme.append([''.join(filter(str.isalnum,keywords)) for keywords in element])
 	df["search_keywords"] = search_keywords_meme
+    
+	df.drop('content', inplace=True, axis=1)
+
+	df.drop('category', inplace=True, axis=1)
 
 	df.to_json(f'{output_folder}/kym_transformed.json',orient = 'index')
 
