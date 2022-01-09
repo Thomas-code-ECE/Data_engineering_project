@@ -14,9 +14,9 @@ id -u
 ```
 
 Now edit the **.env** file and swap out 501 for your own.
-```
 
 And this **once**:
+
 ```sh
 docker-compose up airflow-init
 ```
