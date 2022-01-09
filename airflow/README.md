@@ -1,12 +1,3 @@
-## Table of contents
-
-* What is Airflow?
-* What's the point of Airflow?
-* What can and can't it do?
-* The Dag
-* The Operators
-* Trigger Rules
-
 ## Requirements
 
 * To have docker *and* docker-compose installed.
