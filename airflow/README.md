@@ -15,6 +15,12 @@ id -u
 
 Now edit the **.env** file and swap out 501 for your own.
 
+Download this file and add it to the ./dags folder:
+
+```sh
+https://owncloud.ut.ee/owncloud/index.php/s/g4qB5DZrFEz2XLm/download/kym.json
+```
+
 And this **once**:
 
 ```sh
