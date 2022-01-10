@@ -111,16 +111,22 @@ def _work6(output_folder: str):
 	#Loading kym.json file as a dataframe object
 	df = pd.read_json(f'{output_folder}/kym_transformed2.json')
 
-	#Remove unicode characters from description
-	#description_value = []
-	#for index,element in enumerate(df.description):
-		#description_value.append(element.encode("ascii","ignore").decode())
-	#df["description"] = description_value
+	#Remove unicode characters from title
+	title_value = []
+	for index,element in enumerate(df.title):
+		title_value.append(''.join([i for i in element if i.isalpha() or i.isnumeric() or i == " "]))
+	df["title"] = title_value
+
+	#Remove unicode characters from tags
+	tags_value = []
+	for index,element in enumerate(df.tags):
+		tags_value.append(' '.join([i for i in element if i.isalpha() or i.isnumeric() or i == " "]))
+	df["tags"] = tags_value
 
 	#Remove unicode characters from description
 	description_value = []
 	for index,element in enumerate(df.description):
-		description_value.append(''.join([i for i in element if i.isalpha() or i == " "]))
+		description_value.append(''.join([i for i in element if i.isalpha() or i.isnumeric() or i == " "]))
 	df["description"] = description_value
 
 	#save to a new cleansed jason file
@@ -134,7 +140,7 @@ def _work7(output_folder: str):
 	#Set the tag words in lower case.
 	tags_meme = []
 	for index,element in enumerate(df.tags):
-	    tags_meme.append(list(dict.fromkeys([tag.lower() for tag in element])))
+		tags_meme.append(element.lower())
 	df["tags"] = tags_meme
 
 	#Transform all desxription words to lower case.
@@ -174,16 +180,15 @@ def _work9(output_folder: str):
 	children_meme = []
 	for index,element in enumerate(df.children):
 		if(len(element) != 0):
-			children_meme.append([children.split('/')[-1] for children in element])
+			children_meme.append(' '.join([children.split('/')[-1] for children in element]))
 		else:
-			children_meme.append([])
+			children_meme.append("")
 	df["children"] = children_meme
 
 	#Transform the column parents. Either the key gets parent, create an array with the url where each link has been modified. In the same way as before, we delete the first part of the link which is redundant between the memes "https://knowyourmeme.com/memes/"
 	df.loc[df['parent'].notnull(),['parent']] = df.loc[df['parent'].notnull(),'parent'].apply(lambda x: x.split('/')[-1])
 	df.loc[df['parent'].isnull(),['parent']] = df.loc[df['parent'].isnull(),'parent'].apply(lambda x: 'no parent')
 
-	
 	#save to a new cleansed jason file
 	df.to_json(f'{output_folder}/kym_transformed6.json',orient = 'records')
 
@@ -194,14 +199,22 @@ def _work10(output_folder: str):
 	#Keep only the website of the references
 	web_references_meme = []
 	for index,element in enumerate(df.additional_references):
-	    web_references_meme.append(list(element.keys()))
+	    web_references_meme.append(' '.join(list(element.keys())))
 	df["additional_references"] = web_references_meme
 
 	df.loc[df['search_keywords'].isnull(),['search_keywords']] = df.loc[df['search_keywords'].isnull(),'search_keywords'].apply(lambda x: [])
 	search_keywords_meme= []
 	for index,element in enumerate(df.search_keywords):
-	    search_keywords_meme.append([''.join(filter(str.isalnum,keywords)) for keywords in element])
+	    search_keywords_meme.append([' '.join(filter(str.isalnum,keywords)) for keywords in element])
 	df["search_keywords"] = search_keywords_meme
+
+	#Remove unicode characters from search_keywords
+	search_keywords_value = []
+	for index,element in enumerate(df.search_keywords):
+		search_keywords_value.append(' '.join([i for i in element if i.isalpha() or i.isnumeric() or i == " "]))
+	df["search_keywords"] = search_keywords_value
+
+	#2012doomsday
     
 	df.drop('content', inplace=True, axis=1)
 
