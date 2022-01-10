@@ -202,16 +202,23 @@ def _work10(output_folder: str):
 	    web_references_meme.append(' '.join(list(element.keys())))
 	df["additional_references"] = web_references_meme
 
+	#Remove unicode characters from title
+	additional_references_value = []
+	for index,element in enumerate(df.additional_references):
+		additional_references_value.append(''.join([i for i in element if i.isalpha() or i.isnumeric() or i == " "]))
+	df["additional_references"] = additional_references_value
+
+
 	df.loc[df['search_keywords'].isnull(),['search_keywords']] = df.loc[df['search_keywords'].isnull(),'search_keywords'].apply(lambda x: [])
 	search_keywords_meme= []
 	for index,element in enumerate(df.search_keywords):
-	    search_keywords_meme.append([' '.join(filter(str.isalnum,keywords)) for keywords in element])
+	    search_keywords_meme.append([''.join(filter(str.isalnum,keywords)) for keywords in element])
 	df["search_keywords"] = search_keywords_meme
 
 	#Remove unicode characters from search_keywords
 	search_keywords_value = []
 	for index,element in enumerate(df.search_keywords):
-		search_keywords_value.append(' '.join([i for i in element if i.isalpha() or i.isnumeric() or i == " "]))
+		search_keywords_value.append(' '.join([str(i) for i in element]))
 	df["search_keywords"] = search_keywords_value
 
 	#2012doomsday
@@ -219,6 +226,8 @@ def _work10(output_folder: str):
 	df.drop('content', inplace=True, axis=1)
 
 	df.drop('category', inplace=True, axis=1)
+
+	df.drop('template_image_url', inplace=True, axis=1)
 
 	df.to_json(f'{output_folder}/kym_transformed.json',orient = 'records')
 
