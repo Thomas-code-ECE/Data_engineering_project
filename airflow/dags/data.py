@@ -40,7 +40,7 @@ def _work1(output_folder: str):
 	df = df.drop(df[df.category != "Meme"].index).reset_index(drop=True)
 
 	#save to a new cleansed jason file
-	df.to_json(f'{output_folder}/kym_cleaned1.json',orient = 'columns')
+	df.to_json(f'{output_folder}/kym_cleaned1.json',orient = 'records')
 
 def _work2(output_folder: str):
 	#Loading kym.json file as a dataframe object
@@ -54,7 +54,7 @@ def _work2(output_folder: str):
 	df = df.drop(labels = index_to_drop,axis = 0).reset_index(drop=True)
 
 	#save to a new cleansed jason file
-	df.to_json(f'{output_folder}/kym_cleaned2.json',orient = 'columns')
+	df.to_json(f'{output_folder}/kym_cleaned2.json',orient = 'records')
 
 def _work3(output_folder: str):
 	#Loading kym.json file as a dataframe object
@@ -70,7 +70,7 @@ def _work3(output_folder: str):
 	df.drop('siblings', inplace=True, axis=1)
 
 	#save to a new cleansed jason file
-	df.to_json(f'{output_folder}/kym_cleaned.json',orient = 'columns')
+	df.to_json(f'{output_folder}/kym_cleaned.json',orient = 'records')
 
 
 def _work4(output_folder: str):
@@ -89,7 +89,7 @@ def _work4(output_folder: str):
 	df.drop('meta', inplace=True, axis=1)
 
 	#save to a new cleansed jason file
-	df.to_json(f'{output_folder}/kym_transformed1.json',orient = 'columns')
+	df.to_json(f'{output_folder}/kym_transformed1.json',orient = 'records')
 
 
 def _work5(output_folder: str):
@@ -104,7 +104,7 @@ def _work5(output_folder: str):
 	df = df.drop(df[(df.added < '2007-11-25') & (df.added > '2022-01-01') & (df.added < '2007-11-25') & (df.added > '2022-01-01')].index)
 
 	#save to a new cleansed jason file
-	df.to_json(f'{output_folder}/kym_transformed2.json',orient = 'columns')
+	df.to_json(f'{output_folder}/kym_transformed2.json',orient = 'records')
 
 
 def _work6(output_folder: str):
@@ -112,13 +112,19 @@ def _work6(output_folder: str):
 	df = pd.read_json(f'{output_folder}/kym_transformed2.json')
 
 	#Remove unicode characters from description
+	#description_value = []
+	#for index,element in enumerate(df.description):
+		#description_value.append(element.encode("ascii","ignore").decode())
+	#df["description"] = description_value
+
+	#Remove unicode characters from description
 	description_value = []
 	for index,element in enumerate(df.description):
-		description_value.append(element.encode("ascii","ignore").decode())
+		description_value.append(''.join([i for i in element if i.isalpha() or i == " "]))
 	df["description"] = description_value
 
 	#save to a new cleansed jason file
-	df.to_json(f'{output_folder}/kym_transformed3.json',orient = 'columns')
+	df.to_json(f'{output_folder}/kym_transformed3.json',orient = 'records')
 
 
 def _work7(output_folder: str):
@@ -138,7 +144,7 @@ def _work7(output_folder: str):
 	df["description"] = descriptions_keywords
 
 	#save to a new cleansed jason file
-	df.to_json(f'{output_folder}/kym_transformed4.json',orient = 'columns')
+	df.to_json(f'{output_folder}/kym_transformed4.json',orient = 'records')
 
 def _work8(output_folder: str):
 	#Loading kym.json file as a dataframe object
@@ -157,7 +163,7 @@ def _work8(output_folder: str):
 	df["url"] = url_meme
 
 	#save to a new cleansed jason file
-	df.to_json(f'{output_folder}/kym_transformed5.json',orient = 'columns')
+	df.to_json(f'{output_folder}/kym_transformed5.json',orient = 'records')
 
 def _work9(output_folder: str):
 	#Loading kym.json file as a dataframe object
@@ -179,7 +185,7 @@ def _work9(output_folder: str):
 
 	
 	#save to a new cleansed jason file
-	df.to_json(f'{output_folder}/kym_transformed6.json',orient = 'columns')
+	df.to_json(f'{output_folder}/kym_transformed6.json',orient = 'records')
 
 def _work10(output_folder: str):
 	#Loading kym.json file as a dataframe object
@@ -201,7 +207,7 @@ def _work10(output_folder: str):
 
 	df.drop('category', inplace=True, axis=1)
 
-	df.to_json(f'{output_folder}/kym_transformed.json',orient = 'index')
+	df.to_json(f'{output_folder}/kym_transformed.json',orient = 'records')
 
 node1 = PythonOperator(
     task_id='Remove_NON_Meme',
