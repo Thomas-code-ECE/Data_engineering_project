@@ -17,3 +17,6 @@ match (ti:title {title:"Mikuru Beam"}) RETURN ti
 //Find and match all the titles of memes to which: "the-melancholy-of-haruhi-suzumiya” is parent to
 MATCH (p:parent {parent: 'the-melancholy-of-haruhi-suzumiya'})-[r:is_parent_to]->(ti)
 RETURN p, r, ti
+
+MATCH (p:parent {parent: 'the-melancholy-of-haruhi-suzumiya'})-[r:is_parent_to]->(ti)
+RETURN p.parent, type(r), ti.title
