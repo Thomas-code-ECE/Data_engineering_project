@@ -1,0 +1,19 @@
+// script3_queries
+
+// Which memes originate from Facebook, return the titles of memes and count them
+MATCH (ti:title) -- (:origin {origin:"Facebook"}) RETURN ti
+MATCH (ti:title) -- (:origin {origin:"Facebook"}) RETURN count(ti)
+
+//Count the number of cases when a meme has no parent
+MATCH (p) WHERE p.parent="no parent" RETURN count(*)
+MATCH (p) WHERE p.parent="no parent" RETURN p
+
+//'is not null' includes null, however
+MATCH (yr:origin_year) WHERE yr.origin_year IS NOT NULL RETURN min(yr)
+
+//Find the meme titled "Mikuru Beam"
+match (ti:title {title:"Mikuru Beam"}) RETURN ti
+
+//Find and match all the titles of memes to which: "the-melancholy-of-haruhi-suzumiya” is parent to
+MATCH (p:parent {parent: 'the-melancholy-of-haruhi-suzumiya'})-[r:is_parent_to]->(ti)
+RETURN p, r, ti
