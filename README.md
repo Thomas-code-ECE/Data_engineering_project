@@ -1,7 +1,7 @@
 ## Data_engineering_project
 Design and implement a data pipeline for internet memes
 
-In the folder called Dockerfile, you will find the initial data cleansing and transformation process.
+In the folder called Dockerfile, you will find the initial data for cleansing and transformation process.
 
 In the airflow folder, you will find the instructions to apply the data cleansing and transformation process using the said platform.
 
