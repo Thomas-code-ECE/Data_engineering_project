@@ -1,0 +1,17 @@
+// Create nodes, relatioships Neo4j
+
+call apoc.load.json("file:///kym2.json") 
+YIELD value 
+CREATE(ti:title{title:value.title}) 
+CREATE(p:parent{parent:value.parent}) 
+CREATE(ch:child{child:value.children}) 
+CREATE(o:origin{origin:value.origin})
+CREATE(yr:year{year:value.origin_year})
+CREATE(ar:add_ref{add_ref:value.additional_references}) 
+CREATE(tg:tag{tag:value.tags}) 
+CREATE(p)-[r1:is_parent_to]->(ti) 
+CREATE(ti)-[r2:is_parent_of]->(ch) 
+CREATE(yr)-[r3:or_year{or_year:value.origin_year}]->(o) 
+CREATE(ti)-[r4:tagged]->(tg) 
+CREATE(ti)-[r5:referred_in]->(ar) 
+CREATE(o)-[r6:first_mentioned{first_mentioned:value.origin}]->(ti)
